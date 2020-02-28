@@ -5,6 +5,7 @@ public class Main {
     // Class Level Variables
     private static Connection connection = null;
     private static Statement statement = null;
+    private static PreparedStatement preparedStatement = null;
     private static ResultSet resultSet = null;
     private static Scanner userInput = new Scanner(System.in);
     // Main Function
@@ -82,8 +83,12 @@ public class Main {
         name = userInput.nextLine();
         System.out.print("Student's Mob No: ");
         mobNo = userInput.nextLong();
-        String insertQuery = "insert into student (id, name, mob_num)" + " values (" + id + "," + "'" + name + "'" + "," + mobNo + ");";
-        int status = statement.executeUpdate(insertQuery);
+        String insertQuery = "insert into student (id, name, mob_num) values (?, ?, ?);";
+        preparedStatement = connection.prepareStatement(insertQuery);
+        preparedStatement.setInt(1, id);
+        preparedStatement.setString(2, name);
+        preparedStatement.setLong(3, mobNo);
+        int status = preparedStatement.executeUpdate();
         if(status == 1){
             System.out.println("Student inserted successfully");
         }else{
@@ -102,8 +107,12 @@ public class Main {
         name = userInput.nextLine();
         System.out.print("Student's Mob No: ");
         mobNo = userInput.nextLong();
-        String query = "update student set name = " + "'" + name + "'" + ", mob_num = " + mobNo + " where id = " + id + ";";
-        int status = statement.executeUpdate(query);
+        String query = "update student set name = ?, mob_num = ? where id = ?;";
+        preparedStatement = connection.prepareStatement(query);
+        preparedStatement.setString(1, name);
+        preparedStatement.setLong(2, mobNo);
+        preparedStatement.setInt(3, id);
+        int status = preparedStatement.executeUpdate();
         if(status == 1){
             System.out.println("Student details updated successfully");
         }else{
